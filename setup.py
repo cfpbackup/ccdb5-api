@@ -48,7 +48,7 @@ with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
 
 
 install_requires = [
-    "Django>=4.2,<5.2",
+    "Django>=4.2,<5.3",
     "djangorestframework>=3.15.2,<4.0",
     "requests>=2.32.4,<3",
     "opensearch-py>=2.1.0,<=3.0.0",
