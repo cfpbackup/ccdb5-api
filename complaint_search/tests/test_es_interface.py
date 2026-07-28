@@ -6,7 +6,6 @@ from django.http import StreamingHttpResponse
 from django.test import SimpleTestCase, TestCase
 
 from opensearchpy import OpenSearch
-from parameterized import parameterized
 
 from complaint_search.defaults import AGG_EXCLUDE_FIELDS
 from complaint_search.es_builders import AggregationBuilder, SearchBuilder
