@@ -259,17 +259,13 @@ class EsInterfaceTest_Search(TestCase):
         )
         mock_rget.assert_not_called()
 
-    @parameterized.expand([["csv"], ["json"]])
     @mock.patch.object(OpenSearchExporter, "export_csv")
-    @mock.patch.object(OpenSearchExporter, "export_json")
     @mock.patch.object(OpenSearch, "search")
     @mock.patch("opensearchpy.helpers.scan")
     def test_search_with_format__valid(
         self,
-        export_type,
         mock_es_helper,
         mock_search,
-        mock_exporter_json,
         mock_exporter_csv,
     ):
         mock_search_side_effect = copy.deepcopy(self.MOCK_SEARCH_SIDE_EFFECT)
@@ -277,25 +273,27 @@ class EsInterfaceTest_Search(TestCase):
         mock_search.side_effect = mock_search_side_effect
 
         mock_exporter_csv.return_value = StreamingHttpResponse()
-        mock_exporter_json.return_value = StreamingHttpResponse()
 
-        res = search(format=export_type)
+        res = search(format="csv")
 
         self.assertIsInstance(res, StreamingHttpResponse)
         self.assertEqual(1, mock_es_helper.call_count)
-        if export_type == "csv":
-            self.assertEqual(1, mock_exporter_csv.call_count)
-            self.assertEqual(0, mock_exporter_json.call_count)
-        else:
-            self.assertEqual(1, mock_search.call_count)
-            self.assertEqual(1, mock_exporter_json.call_count)
-            self.assertEqual(0, mock_exporter_csv.call_count)
+        self.assertEqual(1, mock_exporter_csv.call_count)
 
     @mock.patch.object(OpenSearch, "search")
     @mock.patch("requests.get", ok=True, content="RGET_OK")
     def test_search_with_format__invalid(self, mock_rget, mock_search):
         mock_search.return_value = "OK"
         res = search(format="pdf")
+        self.assertEqual(res, {})
+        mock_search.assert_not_called()
+        mock_rget.assert_not_called()
+
+    @mock.patch.object(OpenSearch, "search")
+    @mock.patch("requests.get", ok=True, content="RGET_OK")
+    def test_search_with_format_json__invalid(self, mock_rget, mock_search):
+        mock_search.return_value = "OK"
+        res = search(format="json")
         self.assertEqual(res, {})
         mock_search.assert_not_called()
         mock_rget.assert_not_called()

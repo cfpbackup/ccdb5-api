@@ -265,7 +265,7 @@ def search(agg_exclude=None, **kwargs):
     - Assemble pagination break points if needed.
 
     The response is finalized based on whether the results are to be viewed
-    in a browser or exported as CSV or JSON.
+    in a browser or exported as CSV.
     Exportable results are produced with "scroll" OpenSearch searches,
     and are never paginated.
     """
@@ -349,13 +349,6 @@ def search(agg_exclude=None, **kwargs):
 
         if params.get("format") == "csv":
             res = exporter.export_csv(scan_response, CSV_ORDERED_HEADERS)
-        elif params.get("format") == "json":
-            if "highlight" in body:
-                del body["highlight"]
-            body.update({"size": 0, "track_total_hits": True})
-            count_res = _get_es().search(index=_COMPLAINT_ES_INDEX, body=body)
-            hit_total = count_res["hits"]["total"]["value"]
-            res = exporter.export_json(scan_response, hit_total)
 
     return res
 

@@ -64,10 +64,7 @@ SOURCE_FIELDS = (
 
 EXCLUDE_PREFIX = "not_"
 
-EXPORT_FORMATS = (
-    "csv",
-    "json",
-)
+EXPORT_FORMATS = ("csv",)
 
 CSV_ORDERED_HEADERS = OrderedDict(
     [
@@ -95,7 +92,6 @@ AGG_EXCLUDE_FIELDS = ["zip_code"]
 CHUNK_SIZE = 512
 
 FORMAT_CONTENT_TYPE_MAP = {
-    "json": "application/json",
     "csv": "text/csv",
 }
 
