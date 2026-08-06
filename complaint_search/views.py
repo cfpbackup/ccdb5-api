@@ -177,19 +177,6 @@ def search(request):
     return response
 
 
-@api_view(["GET"])
-@catch_es_error
-def suggest(request):
-    data = _parse_query_params(request.query_params, ["text", "size"])
-
-    serializer = SuggestInputSerializer(data=data)
-    if serializer.is_valid():
-        results = es_interface.suggest(**serializer.validated_data)
-        return Response(results, headers=_build_headers())
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 def _suggest_field(data, field, display_field=None):
     serializer = SuggestFilterInputSerializer(data=data)
     if serializer.is_valid():
