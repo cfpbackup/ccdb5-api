@@ -1,13 +1,8 @@
 import csv
-import json
 from csv import DictWriter
 from io import StringIO
 
 from django.http import StreamingHttpResponse
-
-from rest_framework.exceptions import ValidationError
-
-from complaint_search.defaults import MAX_DOWNLOAD_SIZE
 
 
 class OpenSearchExporter(object):
@@ -74,31 +69,4 @@ class OpenSearchExporter(object):
 
         response = StreamingHttpResponse(stream(), content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=file.csv"
-        return response
-
-    # export_json - Stream an OpenSearch response as a JSON file
-    #
-    # Parameters:
-    # - scanResponse (generator)
-    #   The response from an OpenSearch scan query
-    # - total_count (int)
-    #   The total number of records to be output
-    def export_json(self, scanResponse, total_count):
-        self._check_download_size(total_count)
-
-        def stream():
-            count = 0
-            # Write JSON
-            yield "["
-            for row in scanResponse:
-                count += 1
-                if count < total_count:
-                    yield "{},".format(json.dumps(row))
-                else:
-                    yield json.dumps(row)
-
-            yield "]"
-
-        response = StreamingHttpResponse(stream(), content_type="text/json")
-        response["Content-Disposition"] = "attachment; filename=file.json"
         return response

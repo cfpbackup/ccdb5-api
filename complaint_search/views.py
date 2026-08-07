@@ -9,7 +9,6 @@ from rest_framework.decorators import (
     renderer_classes,
     throttle_classes,
 )
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from complaint_search import es_interface
@@ -127,7 +126,6 @@ def _build_headers():
 @renderer_classes(
     (
         DefaultRenderer,
-        JSONRenderer,
         CSVRenderer,
     )
 )

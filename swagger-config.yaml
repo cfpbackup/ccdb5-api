@@ -332,9 +332,8 @@ components:
       schema:
         type: string
         enum:
-          - json
           - csv
-        default: json
+        default: csv
     from:
       name: frm
       in: query
